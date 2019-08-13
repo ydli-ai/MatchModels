@@ -6,6 +6,7 @@
    * [传统模型](#传统模型)
       * [query和title去重](#query和title去重)
       * [图特征](#图特征)
+      * [普通统计特征](#普通统计特征)
       * [词向量特征](#词向量特征)
       * [特征重要性分析](#特征重要性分析)
       * [LightGBM模型](#lightgbm模型)
@@ -29,47 +30,47 @@
 
 > Trick：利用Pickle保存、读取图是最快的，文件的体积也是最小的。
 
-无向图特征——最大完全子图max_clique：最大完全子图的大小(特征效果提升不明显，舍弃！）。
+**无向图特征——最大完全子图max_clique**：最大完全子图的大小(特征效果提升不明显，舍弃！）。
 
-无向图特征——边连接数max_degrees：统计每个节点的边连接数
+**无向图特征——边连接数max_degrees**：统计每个节点的边连接数
 
-无向图特征——最大连通子图规模max_components：统计每个节点最大连通子图规模
+**无向图特征——最大连通子图规模max_components**：统计每个节点最大连通子图规模
 
-无向图特征——pagerank值：根据Google的pagerank算法计算每个节点的pagerank值，这个虽然我们使是使用无向图进行计算的，但是pagerank是通过迭代计算每个节点的入度来评判每个节点的重要程度。所以在运行pagerank算法的时候会默认把无向边连接转化成双向的边连接。
+**无向图特征——pagerank值**：根据Google的pagerank算法计算每个节点的pagerank值，这个虽然我们使是使用无向图进行计算的，但是pagerank是通过迭代计算每个节点的入度来评判每个节点的重要程度。所以在运行pagerank算法的时候会默认把无向边连接转化成双向的边连接。
 
-无向图特征——HITS算法A值和H值：时间关系没有训练出HITS模型，不过HITS类似pagerank模型，在HIST算法中，分为Hub页面和Authority页面，Authority页面是指与某个领域或者某个话题相关的高质量页面，Hub页面则是包含很多指向高质量Authority页面链接的网页。HITS算法模型会给出每个节点的A值和H值用来评估节点的重要程度。
+**无向图特征——HITS算法A值和H值**：时间关系没有训练出HITS模型，不过HITS类似pagerank模型，在HIST算法中，分为Hub页面和Authority页面，Authority页面是指与某个领域或者某个话题相关的高质量页面，Hub页面则是包含很多指向高质量Authority页面链接的网页。HITS算法模型会给出每个节点的A值和H值用来评估节点的重要程度。
 
-无向图特征——shortestpath：query和title之间的最短路径，对于共现的query和title我们会建立一条边，这样shortestpath会默认是1，所以在计算shortestpath特征的时候，我们会把这条边先删除，shortestpath计算结束后在重新加会这条边。
+**无向图特征——shortestpath**：query和title之间的最短路径，对于共现的query和title我们会建立一条边，这样shortestpath会默认是1，所以在计算shortestpath特征的时候，我们会把这条边先删除，shortestpath计算结束后在重新加会这条边。
 
-无向图特征——neighbour：邻居数，由于图过大计算邻居数会爆内存。在大数据量上，我们舍弃了这维度特征。
+**无向图特征——neighbour**：邻居数，由于图过大计算邻居数会爆内存。在大数据量上，我们舍弃了这维度特征。
 
-权重图特征：图特征的边的权重计划通过，query和title的句子词向量相似度或者BM25算法实现，由于时间紧张没有实现。大概特征类别等同于无向图特征，更多的是作为对于无向图特征的修正。
+**权重图特征**：图特征的边的权重计划通过，query和title的句子词向量相似度或者BM25算法实现，由于时间紧张没有实现。大概特征类别等同于无向图特征，更多的是作为对于无向图特征的修正。
 
-普通统计特征
+## 普通统计特征
 
 *复赛提供15个核的CPU，利用multiprocessing库的进程池管理模块Pool，可以大大加快特征生成速度*
 
-concurrence：query与title中相同词所占词总数比
+**concurrence**：query与title中相同词所占词总数比
 
-levenshteinDistance： 编辑距离（后面通过fuzzywuzzy实现了更为详细的分析）
+**levenshteinDistance**： 编辑距离（后面通过fuzzywuzzy实现了更为详细的分析）
 
-sorensenDistance：sorrensen距离
+**sorensenDistance**：sorrensen距离
 
-sameWord：query与title中相同词种类数，某个词出现label为1的概率乘积（需要初始化pos_prob）
+**sameWord**：query与title中相同词种类数，某个词出现label为1的概率乘积（需要初始化pos_prob）
 
-distance： Dice Distance、Ochi DIstance、 Jaccard Distance
+**distance**： Dice Distance、Ochi DIstance、 Jaccard Distance
 
-fuzzyDistance：通过fuzzywuzzy库(字符串模糊匹配工具)实现的详细编辑距离分析，包括简单匹配(Simple Ratio)、非完全匹配(Partial Ration)、忽略顺序匹配(Token Sort Ratio)、去重子集匹配(Token Set Ratio)
+**fuzzyDistance**：通过fuzzywuzzy库(字符串模糊匹配工具)实现的详细编辑距离分析，包括简单匹配(Simple Ratio)、非完全匹配(Partial Ration)、忽略顺序匹配(Token Sort Ratio)、去重子集匹配(Token Set Ratio)
 
-powerful words：统计label为1时，query和title中同时出现的单词词频(双边概率)、只出现在query或title中的单词词频(单边概率)
+**powerful words**：统计label为1时，query和title中同时出现的单词词频(双边概率)、只出现在query或title中的单词词频(单边概率)
 
 ## 词向量特征
 
-word2vecDistance：基于word2vec词向量的Cosine Distance、Euclidean Distance、Manhattan Distance。（后加入fasttext模型）
+**word2vecDistance**：基于word2vec词向量的Cosine Distance、Euclidean Distance、Manhattan Distance。（后加入fasttext模型）
 
-w2vWeightDistance：基于word2vec词向量，并考虑TF-IDF权重的Cosine Distance、Euclidean Distance、Manhattan Distance。（后加入fasttext模型）
+**w2vWeightDistance**：基于word2vec词向量，并考虑TF-IDF权重的Cosine Distance、Euclidean Distance、Manhattan Distance。（后加入fasttext模型）
 
-NGramDistance：词粒度NGram距离（词粒度效果不好，舍弃！）
+**NGramDistance**：词粒度NGram距离（词粒度效果不好，舍弃！）
 
 ## 特征重要性分析
 
