@@ -2,7 +2,20 @@
 
 我们是最终排名第 15 名的**改革春风吹满地**队伍，对方法和模型进行了简单的整理。
 
-[TOC]
+   * [2019中国高校计算机大赛——大数据挑战赛 WriteUp](#2019中国高校计算机大赛大数据挑战赛-writeup)
+   * [传统模型](#传统模型)
+      * [query和title去重](#query和title去重)
+      * [图特征](#图特征)
+      * [词向量特征](#词向量特征)
+      * [特征重要性分析](#特征重要性分析)
+      * [LightGBM模型](#lightgbm模型)
+         * [LightGBM参数](#lightgbm参数)
+         * [训练](#训练)
+   * [深度模型](#深度模型)
+      * [CNN-DSSM](#cnn-dssm)
+      * [LSTM-DSSM](#lstm-dssm)
+      * [mvlstm](#mvlstm)
+      * [ARC II](#arc-ii)
 
 # 传统模型
 
