@@ -1,4 +1,5 @@
 # 2019中国高校计算机大赛——大数据挑战赛 WriteUp
+赛题：[【正式赛】2019中国高校计算机大赛——大数据挑战赛](https://www.kesci.com/home/competition/5cc51043f71088002c5b8840/content/1)
 
 我们是最终排名第 15 名的**改革春风吹满地**队伍，对方法和模型进行了简单的整理。
 
@@ -126,3 +127,6 @@ https://github.com/NTMC-Community/MatchZoo/blob/master/matchzoo/models/mvlstm.py
 参考
 
 https://github.com/NTMC-Community/MatchZoo/blob/master/matchzoo/models/arcii.py
+
+## TextCNN
+![textcnn](images/textcnn.png)
